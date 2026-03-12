@@ -1,16 +1,12 @@
 {
   "name": "@dreamerdm8000/aniworld-tizen",
   "appName": "AniWorld",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "TizenBrew Modul für AniWorld auf Samsung Tizen TVs",
   "packageType": "mods",
   "websiteURL": "https://aniworld.to",
-  "main": "dist/userScript.js",
-  "serviceFile": "dist/service.js",
-  "scripts": {
-    "install-deps": "cd mods && npm install && cd ..",
-    "build": "cd mods && npm run build && cd .."
-  },
+  "main": "mods/userScript.js",
+  "serviceFile": "service/service.js",
   "keys": [
     "MediaPlayPause",
     "MediaPlay",
@@ -19,7 +15,7 @@
     "MediaFastForward",
     "MediaRewind"
   ],
-  "author": "Dein Name",
+  "author": "dreamerDM8000",
   "license": "MIT",
   "keywords": [
     "tizenbrew",
