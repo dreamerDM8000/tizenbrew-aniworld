@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "TizenBrew Modul für AniWorld auf Samsung Tizen TVs",
   "packageType": "mods",
+  "type": "module",
   "websiteURL": "https://aniworld.to",
   "main": "mods/userScript.js",
   "serviceFile": "service/service.js",
@@ -25,6 +26,10 @@
     "aniworld",
     "anime"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dreamerDM8000/tizenbrew-aniworld"
+  },
   "publishConfig": {
     "access": "public"
   }
