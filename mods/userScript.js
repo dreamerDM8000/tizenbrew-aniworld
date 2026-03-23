@@ -31,7 +31,7 @@
 
   function initNavigation() {
     const s = document.createElement("script");
-    s.src = "./spatial_navigation.js";
+    s.src = "https://luke-chang.github.io/js-spatial-navigation/spatial_navigation.js";
     s.onload = setupSections;
     document.head.appendChild(s);
 
