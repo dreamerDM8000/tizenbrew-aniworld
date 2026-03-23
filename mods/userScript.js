@@ -1,4 +1,3 @@
-import "spatial_navigation.js";
 (function () {
   "use strict";
 
