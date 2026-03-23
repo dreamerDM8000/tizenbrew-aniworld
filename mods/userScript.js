@@ -1,3 +1,4 @@
+import "spatial_navigation.js";
 (function () {
   "use strict";
 
@@ -30,14 +31,21 @@
   `;
 
   function initNavigation() {
-    const s = document.createElement("script");
-    s.src = "https://luke-chang.github.io/js-spatial-navigation/spatial_navigation.js";
-    s.onload = setupSections;
-    document.head.appendChild(s);
+  const s = document.createElement("script");
+  s.src = "./spatial_navigation.js";
+  document.head.appendChild(s);
 
-    const style = document.createElement("style");
-    style.textContent = FOCUS_STYLE;
-    document.head.appendChild(style);
+  const style = document.createElement("style");
+  style.textContent = FOCUS_STYLE;
+  document.head.appendChild(style);
+
+  // Polling statt onload
+  const checkSN = setInterval(() => {
+    if (window.SpatialNavigation) {
+      clearInterval(checkSN);
+      setupSections();
+    }
+  }, 50);
   }
 
   function setupSections() {
