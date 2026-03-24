@@ -6,15 +6,17 @@
   "packageType": "mods",
   "type": "module",
   "websiteURL": "https://aniworld.to",
-  "main": "dist/userScript.js",
-  "serviceFile": "dist/service.js",
+  "main": "mods/userScript.js",
+  "serviceFile": "service/service.js",
   "keys": [
     "MediaPlayPause",
     "MediaPlay",
     "MediaPause",
     "MediaStop",
     "MediaFastForward",
-    "MediaRewind"
+    "MediaRewind",
+    "MediaTrackNext",
+    "MediaTrackPrevious"
   ],
   "author": "dreamerDM8000",
   "license": "MIT",
