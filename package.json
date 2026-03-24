@@ -6,7 +6,7 @@
   "packageType": "mods",
   "type": "module",
   "websiteURL": "https://aniworld.to",
-  "main": "mods/userScript.js",
+  "main": "dist/userScript.js",
   "serviceFile": "service/service.js",
   "keys": [
     "MediaPlayPause",
