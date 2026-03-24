@@ -1,11 +1,4 @@
-// ==UserScript==
-// @name         AniWorld TV Navigation
-// @namespace    https://aniworld.to/
-// @version      1.0
-// @description  TV-Style Navigation für AniWorld
-// @match        https://aniworld.to/*
-// @run-at       document-end
-// ==/UserScript==
+import "./spatial_navigation.js";
 
 (function () {
   "use strict";
@@ -20,12 +13,12 @@
     .main-header,
     .header-container,
     .header-content,
+    .logo-wrapper,
     .primary-navigation,
     .primary-navigation > ul,
     .primary-navigation > ul > li {
       overflow: visible !important;
       z-index: 9998 !important;
-      position: relative !important;
     }
     .avatar {
       overflow: visible !important;
@@ -40,20 +33,11 @@
   `;
 
   function initNavigation() {
-    const s = document.createElement("script");
-    s.src = "./spatial_navigation.js";
-    document.head.appendChild(s);
-
     const style = document.createElement("style");
     style.textContent = FOCUS_STYLE;
     document.head.appendChild(style);
 
-    const checkSN = setInterval(() => {
-      if (window.SpatialNavigation) {
-        clearInterval(checkSN);
-        setupSections();
-      }
-    }, 50);
+    setupSections();
   }
 
   function setupSections() {
@@ -77,7 +61,7 @@
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
-      document.querySelectorAll(".primary-navigation > ul > li")
+      document.querySelectorAll(".primary-navigation > ul > li"),
     ).find((li) => li.querySelector(":scope > strong"));
 
     if (mehrLi) {
@@ -210,7 +194,8 @@
         });
 
         icheckHelper.addEventListener("focus", function () {
-          icheckHelper.closest(".icheckbox_square-blue").style.outline = "4px solid #FF6600";
+          icheckHelper.closest(".icheckbox_square-blue").style.outline =
+            "4px solid #FF6600";
         });
 
         icheckHelper.addEventListener("blur", function () {
@@ -291,12 +276,14 @@
             watched.addEventListener("focusout", hideWatchedModal);
             watchedModal.addEventListener("focusout", hideWatchedModal);
 
-            watchedModal.querySelectorAll(".clearAllEpisodesFromThisSeason").forEach((item) => {
-              item.setAttribute("tabindex", "-1");
-              item.addEventListener("keydown", (e) => {
-                if (e.keyCode === 13) item.click();
+            watchedModal
+              .querySelectorAll(".clearAllEpisodesFromThisSeason")
+              .forEach((item) => {
+                item.setAttribute("tabindex", "-1");
+                item.addEventListener("keydown", (e) => {
+                  if (e.keyCode === 13) item.click();
+                });
               });
-            });
           }
         }
 
@@ -324,5 +311,4 @@
   } else {
     initNavigation();
   }
-
 })();
