@@ -33,9 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "build": "rollup -c mods/rollup.config.js && rollup -c service/rollup.config.js"
-  },
   "bugs": {
     "url": "https://github.com/dreamerDM8000/tizenbrew-aniworld/issues"
   },
