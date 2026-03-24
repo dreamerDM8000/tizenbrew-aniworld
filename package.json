@@ -7,7 +7,7 @@
   "type": "module",
   "websiteURL": "https://aniworld.to",
   "main": "dist/userScript.js",
-  "serviceFile": "service/service.js",
+  "serviceFile": "dist/service.js",
   "keys": [
     "MediaPlayPause",
     "MediaPlay",
@@ -33,9 +33,9 @@
   "publishConfig": {
     "access": "public"
   },
-  // "scripts": {
-  //   "build": "rollup -c mods/rollup.config.js"
-  // },
+  "scripts": {
+    "build": "rollup -c mods/rollup.config.js && rollup -c service/rollup.config.js"
+  },
   "bugs": {
     "url": "https://github.com/dreamerDM8000/tizenbrew-aniworld/issues"
   },
