@@ -1,3 +1,12 @@
+// ==UserScript==
+// @name         AniWorld TV Navigation
+// @namespace    https://aniworld.to/
+// @version      1.0
+// @description  TV-Style Navigation für AniWorld
+// @match        https://aniworld.to/*
+// @run-at       document-end
+// ==/UserScript==
+
 (function () {
   "use strict";
 
@@ -16,6 +25,7 @@
     .primary-navigation > ul > li {
       overflow: visible !important;
       z-index: 9998 !important;
+      position: relative !important;
     }
     .avatar {
       overflow: visible !important;
@@ -30,49 +40,44 @@
   `;
 
   function initNavigation() {
-  const s = document.createElement("script");
-  s.src = "./spatial_navigation.js";
-  document.head.appendChild(s);
+    const s = document.createElement("script");
+    s.src = "./spatial_navigation.js";
+    document.head.appendChild(s);
 
-  const style = document.createElement("style");
-  style.textContent = FOCUS_STYLE;
-  document.head.appendChild(style);
+    const style = document.createElement("style");
+    style.textContent = FOCUS_STYLE;
+    document.head.appendChild(style);
 
-  // Polling statt onload
-  const checkSN = setInterval(() => {
-    if (window.SpatialNavigation) {
-      clearInterval(checkSN);
-      setupSections();
-    }
-  }, 50);
+    const checkSN = setInterval(() => {
+      if (window.SpatialNavigation) {
+        clearInterval(checkSN);
+        setupSections();
+      }
+    }, 50);
   }
 
   function setupSections() {
     const SN = window.SpatialNavigation;
     const path = window.location.pathname;
     const host = window.location.hostname;
+    const parts = path.split("/");
     SN.init();
 
-    SN.add({
-      id: "header",
-      selector: [
-        ".primary-navigation > ul > li > a",
-        ".primary-navigation > ul > li > strong",
-        ".primary-navigation > ul > li > ul > li > a",
-        ".offset-navigation.extraPadding > a",
-        ".menuSearchButton",
-        ".liveNewsFeedButton",
-        ".liveNewsFeedContent a",
-        "[href='/account/notifications']",
-        ".avatar > a",
-        ".dd > p > a",
-        ".dd .modal a",
-      ].join(", "),
-    });
+    // Avatar
+    const avatarLink = document.querySelector(".avatar > a");
+    if (avatarLink) {
+      const img = avatarLink.querySelector("img");
+      avatarLink.addEventListener("focus", function () {
+        img.setAttribute("style", "box-shadow: 0 0 0 4px #FF6600;");
+      });
+      avatarLink.addEventListener("blur", function () {
+        img.removeAttribute("style");
+      });
+    }
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
-      document.querySelectorAll(".primary-navigation > ul > li"),
+      document.querySelectorAll(".primary-navigation > ul > li")
     ).find((li) => li.querySelector(":scope > strong"));
 
     if (mehrLi) {
@@ -95,7 +100,7 @@
       });
     }
 
-    // menuSearchButton und liveNewsFeedButton fokussierbar machen
+    // menuSearchButton
     const menuSearchButton = document.querySelector(".menuSearchButton");
     if (menuSearchButton) {
       menuSearchButton.setAttribute("tabindex", "-1");
@@ -104,6 +109,7 @@
       });
     }
 
+    // liveNewsFeed
     const liveNewsFeed = document.querySelector(".liveNewsFeed");
     if (liveNewsFeed) {
       const button = liveNewsFeed.querySelector(".liveNewsFeedButton");
@@ -123,18 +129,7 @@
       });
     }
 
-    const avatarLink = document.querySelector(".avatar > a");
-    if (avatarLink) {
-      const img = avatarLink.querySelector("img");
-      avatarLink.addEventListener("focus", function () {
-        img.setAttribute("style", "box-shadow: 0 0 0 4px #FF6600;");
-      });
-      avatarLink.addEventListener("blur", function () {
-        img.removeAttribute("style");
-      });
-    }
-
-    // ".dd" Modal
+    // dd Modal
     const dd = document.querySelector(".dd");
     if (dd) {
       const modal = dd.querySelector(".modal");
@@ -152,38 +147,55 @@
       });
     }
 
+    // Header (alle Seiten)
+    SN.add({
+      id: "header",
+      selector: [
+        ".primary-navigation > ul > li > a",
+        ".primary-navigation > ul > li > strong",
+        ".primary-navigation > ul > li > ul > li > a",
+        ".offset-navigation.extraPadding > a",
+        ".menuSearchButton",
+        ".liveNewsFeedButton",
+        ".liveNewsFeedContent a",
+        "[href='/account/notifications']",
+        ".avatar > a",
+        ".dd > p > a",
+        ".dd .modal a",
+      ].join(", "),
+    });
+
     if (host !== "aniworld.to") {
+      SN.makeFocusable();
+      SN.focus();
       return;
     }
-
-    const parts = path.split("/");
 
     if (path === "/") {
       const container = document.querySelector(".container");
       if (container) {
         container.innerHTML = `
-      <div style="text-align: center; padding: 80px 20px; color: #fff;">
-        <h2 style="font-size: 28px; margin-bottom: 20px;">AniWorld</h2>
-        <p style="font-size: 18px; color: #aaa;">
-          Die Hauptseite ist vorerst nicht verfügbar.<br>Bitte navigiere über die Kopfzeile oder die Fußzeile oder über die WatchList.
-        </p>
-      </div>
-    `;
+          <div style="text-align: center; padding: 80px 20px; color: #fff;">
+            <h2 style="font-size: 28px; margin-bottom: 20px;">AniWorld</h2>
+            <p style="font-size: 18px; color: #aaa;">
+              Die Hauptseite ist vorerst nicht verfügbar.<br>
+              Bitte navigiere über die Kopfzeile oder die Fußzeile oder über die WatchList.
+            </p>
+          </div>
+        `;
       }
-      return;
     } else if (path === "/registrierung") {
       const accountFeatures = document.querySelector(".accountFeatures");
       if (accountFeatures) {
         accountFeatures.innerHTML = `
-      <div style="text-align: center; padding: 80px 20px; color: #fff;">
-        <h2 style="font-size: 28px; margin-bottom: 20px;">Registrierung</h2>
-        <p style="font-size: 18px; color: #aaa;">
-          Bitte registriere dich über ein anderes Gerät<br>(PC, Smartphone oder Tablet).
-        </p>
-      </div>
-    `;
+          <div style="text-align: center; padding: 80px 20px; color: #fff;">
+            <h2 style="font-size: 28px; margin-bottom: 20px;">Registrierung</h2>
+            <p style="font-size: 18px; color: #aaa;">
+              Bitte registriere dich über ein anderes Gerät<br>(PC, Smartphone oder Tablet).
+            </p>
+          </div>
+        `;
       }
-      return;
     } else if (path === "/login") {
       const icheckHelper = document.querySelector(".iCheck-helper");
       if (icheckHelper) {
@@ -198,8 +210,7 @@
         });
 
         icheckHelper.addEventListener("focus", function () {
-          icheckHelper.closest(".icheckbox_square-blue").style.outline =
-            "4px solid #FF6600";
+          icheckHelper.closest(".icheckbox_square-blue").style.outline = "4px solid #FF6600";
         });
 
         icheckHelper.addEventListener("blur", function () {
@@ -238,18 +249,11 @@
       const hasFilm = parts.some((p) => p.startsWith("film-"));
 
       if (hasEpisode || hasFilm) {
-        // /anime/stream/.../staffel-1/episode-1
-        // /anime/stream/.../filme/film-1
-
-        /*
-         * TODO: Gesamte seite muss gemacht werden für den player
-         */
         SN.add({
           id: "player",
-          selector: [".cf.breadCrumbMenu.dark > li > a"].join(", "),
+          selector: ".cf.breadCrumbMenu.dark > li > a",
         });
       } else {
-        // /anime/stream/<anime-name> oder /anime/stream/<anime-name>/staffel-1 / filme
         const snId = parts.length === 4 ? "anime-main" : "anime-season";
 
         SN.add({
@@ -262,43 +266,41 @@
             ".normalDropdown > .clearAllEpisodesFromThisSeason",
             "tbody > tr > td > a",
             ".episodeMenu",
-          ].join(","),
+          ].join(", "),
         });
 
-        // Dropdown Button & Modal
+        // Staffel gesehen Dropdown
         const watched = document.querySelector(".normalDropdownButton");
         if (watched) {
-          const modal = document.querySelector(".normalDropdown");
-          if (modal) {
-            const toggleModal = () => (modal.style.display = "block");
-            const hideModal = () => {
+          const watchedModal = document.querySelector(".normalDropdown");
+          if (watchedModal) {
+            const hideWatchedModal = () => {
               setTimeout(() => {
                 if (
                   !watched.contains(document.activeElement) &&
-                  !modal.contains(document.activeElement)
+                  !watchedModal.contains(document.activeElement)
                 ) {
-                  modal.style.display = "none";
+                  watchedModal.style.display = "none";
                 }
               }, 50);
             };
 
-            watched.addEventListener("focusin", toggleModal);
-            watched.addEventListener("focusout", hideModal);
-            modal.addEventListener("focusout", hideModal);
+            watched.addEventListener("focusin", () => {
+              watchedModal.style.display = "block";
+            });
+            watched.addEventListener("focusout", hideWatchedModal);
+            watchedModal.addEventListener("focusout", hideWatchedModal);
 
-            // Gesehen / Nicht gesehen per ENTER
-            modal
-              .querySelectorAll(".clearAllEpisodesFromThisSeason")
-              .forEach((item) => {
-                item.setAttribute("tabindex", "-1");
-                item.addEventListener("keydown", (e) => {
-                  if (e.keyCode === 13) item.click();
-                });
+            watchedModal.querySelectorAll(".clearAllEpisodesFromThisSeason").forEach((item) => {
+              item.setAttribute("tabindex", "-1");
+              item.addEventListener("keydown", (e) => {
+                if (e.keyCode === 13) item.click();
               });
+            });
           }
         }
 
-        // Alle Episode-Menüs per ENTER
+        // Episode gesehen Toggle
         document.querySelectorAll(".episodeMenu").forEach((seen) => {
           seen.setAttribute("tabindex", "-1");
           seen.addEventListener("keydown", (e) => {
@@ -310,11 +312,17 @@
 
     SN.add({
       id: "footer",
-      selector: [".footer-container > div > ul > li > a"].join(", "),
+      selector: ".footer-container > div > ul > li > a",
     });
+
     SN.makeFocusable();
     SN.focus();
   }
 
-  initNavigation();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initNavigation);
+  } else {
+    initNavigation();
+  }
+
 })();
