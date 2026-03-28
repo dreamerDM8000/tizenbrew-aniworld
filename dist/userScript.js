@@ -1363,6 +1363,16 @@
       style.textContent = FOCUS_STYLE;
       document.head.appendChild(style);
 
+      window.addEventListener("keydown", function (e) {
+      if (e.keyCode === 10009) {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else if (typeof tizen !== "undefined") {
+          tizen.application.getCurrentApplication().exit();
+        }
+      }
+    });
+
       setupSections();
     }
 
@@ -1384,9 +1394,11 @@
           img.removeAttribute("style");
         });
       }
+      
       // Avatar → dd Navigation fix für Tizen
       const ddLink = document.querySelector(".dd > p > a");
       if (avatarLink && ddLink) {
+        ddLink.setAttribute("tabindex", "-1"); // explizit setzen
         avatarLink.setAttribute("data-sn-right", ".dd > p > a");
         ddLink.setAttribute("data-sn-left", ".avatar > a");
       }
