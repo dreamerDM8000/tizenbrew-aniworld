@@ -1384,6 +1384,12 @@
           img.removeAttribute("style");
         });
       }
+      // Avatar → dd Navigation fix für Tizen
+      const ddLink = document.querySelector(".dd > p > a");
+      if (avatarLink && ddLink) {
+        avatarLink.setAttribute("data-sn-right", ".dd > p > a");
+        ddLink.setAttribute("data-sn-left", ".avatar > a");
+      }
 
       // "mehr" Dropdown
       const mehrLi = Array.from(
