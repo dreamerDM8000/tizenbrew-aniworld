@@ -37,6 +37,16 @@ import "./spatial_navigation.js";
     style.textContent = FOCUS_STYLE;
     document.head.appendChild(style);
 
+    window.addEventListener("keydown", function (e) {
+    if (e.keyCode === 10009) {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else if (typeof tizen !== "undefined") {
+        tizen.application.getCurrentApplication().exit();
+      }
+    }
+  });
+
     setupSections();
   }
 
