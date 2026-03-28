@@ -72,6 +72,7 @@ import "./spatial_navigation.js";
     // Avatar → dd Navigation fix für Tizen
     const ddLink = document.querySelector(".dd > p > a");
     if (avatarLink && ddLink) {
+      ddLink.setAttribute("tabindex", "-1"); // explizit setzen
       avatarLink.setAttribute("data-sn-right", ".dd > p > a");
       ddLink.setAttribute("data-sn-left", ".avatar > a");
     }
