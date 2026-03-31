@@ -1364,14 +1364,14 @@
       document.head.appendChild(style);
 
       window.addEventListener("keydown", function (e) {
-      if (e.keyCode === 10009) {
-        if (window.history.length > 1) {
-          window.history.back();
-        } else if (typeof tizen !== "undefined") {
-          tizen.application.getCurrentApplication().exit();
+        if (e.keyCode === 10009) {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else if (typeof tizen !== "undefined") {
+            tizen.application.getCurrentApplication().exit();
+          }
         }
-      }
-    });
+      });
 
       setupSections();
     }
@@ -1394,13 +1394,51 @@
           img.removeAttribute("style");
         });
       }
-      
-      // Avatar → dd Navigation fix für Tizen
-      const ddLink = document.querySelector(".dd > p > a");
-      if (avatarLink && ddLink) {
-        ddLink.setAttribute("tabindex", "-1"); // explizit setzen
-        avatarLink.setAttribute("data-sn-right", ".dd > p > a");
-        ddLink.setAttribute("data-sn-left", ".avatar > a");
+      const ddTrigger = document.querySelector(".dd > p > a");
+      const ddModal = document.querySelector(".dd .modal");
+
+      if (ddTrigger && ddModal) {
+        // Fokus erzwingen
+        ddTrigger.setAttribute("tabindex", "0");
+
+        // Navigation Avatar ↔ DD
+        if (avatarLink) {
+          avatarLink.setAttribute("data-sn-right", ".dd > p > a");
+          ddTrigger.setAttribute("data-sn-left", ".avatar > a");
+        }
+
+        // Nach unten ins Dropdown (GENAUER SELECTOR)
+        ddTrigger.setAttribute("data-sn-down", ".dd .modal > ul > li > a");
+
+        // Modal für Navigation vorbereiten (Tizen Trick)
+        ddModal.style.display = "block";
+        ddModal.style.visibility = "hidden";
+
+        // Beim Fokus anzeigen
+        ddTrigger.addEventListener("focus", () => {
+          ddModal.style.visibility = "visible";
+        });
+
+        // Beim Verlassen verstecken
+        const dd = ddTrigger.closest(".dd");
+
+        dd.addEventListener("focusout", () => {
+          setTimeout(() => {
+            if (!dd.contains(document.activeElement)) {
+              ddModal.style.visibility = "hidden";
+            }
+          }, 50);
+        });
+
+        // Dropdown Items
+        const items = ddModal.querySelectorAll("ul > li > a");
+
+        items.forEach((item) => {
+          item.setAttribute("tabindex", "0");
+
+          // zurück nach oben
+          item.setAttribute("data-sn-up", ".dd > p > a");
+        });
       }
 
       // "mehr" Dropdown
@@ -1489,7 +1527,7 @@
           "[href='/account/notifications']",
           ".avatar > a",
           ".dd > p > a",
-          ".dd .modal a",
+          ".modal > ul > li > a",
         ].join(", "),
       });
 
