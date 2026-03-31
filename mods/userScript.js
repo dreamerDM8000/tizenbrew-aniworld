@@ -68,51 +68,28 @@ import "./spatial_navigation.js";
         img.removeAttribute("style");
       });
     }
-    const ddTrigger = document.querySelector(".dd > p > a");
-    const ddModal = document.querySelector(".dd .modal");
+    const dd = document.querySelector(".dd");
+    if (dd) {
+      const ddTrigger = dd.querySelector("p > a");
+      const ddModal = dd.querySelector(".modal");
 
-    if (ddTrigger && ddModal) {
-      // Fokus erzwingen
-      ddTrigger.setAttribute("tabindex", "0");
+      if (ddTrigger && ddModal) {
+        ddTrigger.setAttribute("tabindex", "-1");
 
-      // Navigation Avatar ↔ DD
-      if (avatarLink) {
-        avatarLink.setAttribute("data-sn-right", ".dd > p > a");
-        ddTrigger.setAttribute("data-sn-left", ".avatar > a");
+        ddTrigger.addEventListener("focusin", function () {
+          ddModal.style.display = "block";
+          ddModal.style.zIndex = "99999";
+        });
+
+        ddTrigger.addEventListener("focusout", function () {
+          setTimeout(() => {
+            if (!dd.contains(document.activeElement)) {
+              ddModal.style.display = "";
+              ddModal.style.zIndex = "";
+            }
+          }, 50);
+        });
       }
-
-      // Nach unten ins Dropdown (GENAUER SELECTOR)
-      ddTrigger.setAttribute("data-sn-down", ".dd .modal > ul > li > a");
-
-      // Modal für Navigation vorbereiten (Tizen Trick)
-      ddModal.style.display = "block";
-      ddModal.style.visibility = "hidden";
-
-      // Beim Fokus anzeigen
-      ddTrigger.addEventListener("focus", () => {
-        ddModal.style.visibility = "visible";
-      });
-
-      // Beim Verlassen verstecken
-      const dd = ddTrigger.closest(".dd");
-
-      dd.addEventListener("focusout", () => {
-        setTimeout(() => {
-          if (!dd.contains(document.activeElement)) {
-            ddModal.style.visibility = "hidden";
-          }
-        }, 50);
-      });
-
-      // Dropdown Items
-      const items = ddModal.querySelectorAll("ul > li > a");
-
-      items.forEach((item) => {
-        item.setAttribute("tabindex", "0");
-
-        // zurück nach oben
-        item.setAttribute("data-sn-up", ".dd > p > a");
-      });
     }
 
     // "mehr" Dropdown
@@ -169,24 +146,6 @@ import "./spatial_navigation.js";
       });
     }
 
-    // dd Modal
-    const dd = document.querySelector(".dd");
-    if (dd) {
-      const modal = dd.querySelector(".modal");
-
-      dd.addEventListener("focusin", function () {
-        modal.style.display = "block";
-      });
-
-      dd.addEventListener("focusout", function () {
-        setTimeout(() => {
-          if (!dd.contains(document.activeElement)) {
-            modal.style.display = "none";
-          }
-        }, 50);
-      });
-    }
-
     // Header (alle Seiten)
     SN.add({
       id: "header",
@@ -201,7 +160,7 @@ import "./spatial_navigation.js";
         "[href='/account/notifications']",
         ".avatar > a",
         ".dd > p > a",
-        ".modal > ul > li > a",
+        ".dd .modal > ul > li > a",
       ].join(", "),
     });
 
