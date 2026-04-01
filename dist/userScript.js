@@ -1493,6 +1493,7 @@
           ".dd > p > a",
           ".dd .modal > ul > li > a",
         ].join(", "),
+        restrict: "none",
       });
 
       if (host !== "aniworld.to") {

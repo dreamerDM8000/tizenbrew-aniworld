@@ -36,5 +36,8 @@
   },
   "scripts": {
     "build": "rollup -c mods/rollup.config.js"
+  },
+  "devDependencies": {
+    "rollup": "^4.60.1"
   }
 }
