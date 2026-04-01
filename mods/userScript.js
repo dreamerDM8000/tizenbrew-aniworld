@@ -75,6 +75,11 @@ import "./spatial_navigation.js";
 
       if (ddTrigger && ddModal) {
         ddTrigger.setAttribute("tabindex", "-1");
+        ddModal.querySelectorAll("a").forEach((link) => {
+          if (!link.hasAttribute("tabindex")) {
+            link.setAttribute("tabindex", "-1");
+          }
+        });
 
         ddTrigger.addEventListener("focusin", function () {
           ddModal.style.display = "block";
