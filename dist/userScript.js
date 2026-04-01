@@ -1395,28 +1395,35 @@
         });
       }
       const dd = document.querySelector(".dd");
+
       if (dd) {
         const ddTrigger = dd.querySelector("p > a");
         const ddModal = dd.querySelector(".modal");
 
         if (ddTrigger && ddModal) {
-          ddTrigger.setAttribute("tabindex", "-1");
+          // Trigger fixen (WICHTIG)
+          ddTrigger.setAttribute("tabindex", "0");
+          ddTrigger.removeAttribute("href");
+
+          // Menü-Links navigierbar machen
           ddModal.querySelectorAll("a").forEach((link) => {
-            if (!link.hasAttribute("tabindex")) {
-              link.setAttribute("tabindex", "-1");
-            }
+            link.setAttribute("tabindex", "0");
           });
 
-          ddTrigger.addEventListener("focusin", function () {
+          // Standard: versteckt
+          ddModal.style.display = "none";
+
+          // Öffnen (wie "mehr")
+          dd.addEventListener("focusin", function () {
             ddModal.style.display = "block";
             ddModal.style.zIndex = "99999";
           });
 
-          ddTrigger.addEventListener("focusout", function () {
+          // Schließen
+          dd.addEventListener("focusout", function () {
             setTimeout(() => {
               if (!dd.contains(document.activeElement)) {
-                ddModal.style.display = "";
-                ddModal.style.zIndex = "";
+                ddModal.style.display = "none";
               }
             }, 50);
           });
