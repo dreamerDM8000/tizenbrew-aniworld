@@ -1455,25 +1455,21 @@
       SN.add({
         id: "header",
         selector: [
-          ".primary-navigation > ul > li > a",
-          ".primary-navigation > ul > li > strong",
-          ".primary-navigation > ul > li > ul > li > a",
-          ".offset-navigation.extraPadding > a",
-          ".menuSearchButton",
-          ".liveNewsFeedButton",
-          ".liveNewsFeedContent a",
-          "[href='/account/notifications']",
+          // ".primary-navigation > ul > li > a",
+          // ".primary-navigation > ul > li > strong",
+          // ".primary-navigation > ul > li > ul > li > a",
+          // ".offset-navigation.extraPadding > a",
+          // ".menuSearchButton",
+          // ".liveNewsFeedButton",
+          // ".liveNewsFeedContent a",
+          // "[href='/account/notifications']",
           ".avatar > a",
-        ].join(", "),
-      });
-      SN.add({
-        id: "test",
-        selector: [
           ".dd > p > a[href='#']",
           "a[href='#']",
           ".dd .modal > ul > li > a",
         ].join(", "),
       });
+
       if (host !== "aniworld.to") {
         SN.makeFocusable();
         SN.focus();
