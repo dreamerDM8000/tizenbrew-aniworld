@@ -138,12 +138,16 @@ import "./spatial_navigation.js";
         ".liveNewsFeedContent a",
         "[href='/account/notifications']",
         ".avatar > a",
+      ].join(", "),
+    });
+    SN.add({
+      id: "test",
+      selector: [
         ".dd > p > a[href='#']",
         "a[href='#']",
         ".dd .modal > ul > li > a",
       ].join(", "),
     });
-
     if (host !== "aniworld.to") {
       SN.makeFocusable();
       SN.focus();
