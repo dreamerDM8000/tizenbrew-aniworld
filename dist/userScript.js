@@ -1394,41 +1394,8 @@
           img.removeAttribute("style");
         });
       }
-      const dd = document.querySelector(".dd");
 
-      if (dd) {
-        const ddTrigger = dd.querySelector("p > a");
-        const ddModal = dd.querySelector(".modal");
-
-        if (ddTrigger && ddModal) {
-          // Trigger fixen (WICHTIG)
-          ddTrigger.setAttribute("tabindex", "0");
-          ddTrigger.removeAttribute("href");
-
-          // Menü-Links navigierbar machen
-          ddModal.querySelectorAll("a").forEach((link) => {
-            link.setAttribute("tabindex", "0");
-          });
-
-          // Standard: versteckt
-          ddModal.style.display = "none";
-
-          // Öffnen (wie "mehr")
-          dd.addEventListener("focusin", function () {
-            ddModal.style.display = "block";
-            ddModal.style.zIndex = "99999";
-          });
-
-          // Schließen
-          dd.addEventListener("focusout", function () {
-            setTimeout(() => {
-              if (!dd.contains(document.activeElement)) {
-                ddModal.style.display = "none";
-              }
-            }, 50);
-          });
-        }
-      }
+      //TODO: User Dropdown
 
       // "mehr" Dropdown
       const mehrLi = Array.from(
@@ -1497,10 +1464,10 @@
           ".liveNewsFeedContent a",
           "[href='/account/notifications']",
           ".avatar > a",
-          ".dd > p > a",
+          ".dd > p > a[href='#']",
+          "a[href='#']",
           ".dd .modal > ul > li > a",
         ].join(", "),
-        restrict: "none",
       });
 
       if (host !== "aniworld.to") {
@@ -1649,7 +1616,7 @@
             });
           });
         }
-      }
+      } else if (path.startsWith("/search?")) ;
 
       SN.add({
         id: "footer",
