@@ -70,6 +70,41 @@ import "./spatial_navigation.js";
     }
 
     //TODO: User Dropdown
+    const dd = document.querySelector(".dd");
+
+    if (dd) {
+      const ddTrigger = dd.querySelector("p > a");
+      const ddModal = dd.querySelector(".modal");
+
+      if (ddTrigger && ddModal) {
+        // Trigger fixen (WICHTIG)
+        ddTrigger.setAttribute("tabindex", "-1");
+        ddTrigger.setAttribute("href", "https://aniworld.to/#");
+
+        // Menü-Links navigierbar machen
+        ddModal.querySelectorAll("a").forEach((link) => {
+          link.setAttribute("tabindex", "-1");
+        });
+
+        // Standard: versteckt
+        ddModal.style.display = "none";
+
+        // Öffnen (wie "mehr")
+        dd.addEventListener("focusin", function () {
+          ddModal.style.display = "block";
+          ddModal.style.zIndex = "99999";
+        });
+
+        // Schließen
+        dd.addEventListener("focusout", function () {
+          setTimeout(() => {
+            if (!dd.contains(document.activeElement)) {
+              ddModal.style.display = "none";
+            }
+          }, 50);
+        });
+      }
+    }
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
@@ -138,8 +173,8 @@ import "./spatial_navigation.js";
         // ".liveNewsFeedContent a",
         // "[href='/account/notifications']",
         ".avatar > a",
-        ".dd > p > a[href='#']",
-        "a[href='#']",
+        ".dd > p > a[href='https://aniworld.to/#']",
+        "a[href='https://aniworld.to/#']",
         ".dd .modal > ul > li > a",
       ].join(", "),
     });
