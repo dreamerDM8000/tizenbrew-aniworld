@@ -1399,29 +1399,35 @@
       const dd = document.querySelector(".dd");
 
       if (dd) {
-        const ddTrigger = dd.querySelector("p > a");
+        const p = dd.querySelector("p");
+
+        if (p) {
+          const a = p.querySelector("a");
+          if (a) {
+            dd.insertBefore(a, p); // <a> vor <p> setzen
+            p.remove(); // <p> löschen
+          }
+        }
+
+        // Danach normal weitermachen
+        const ddTrigger = dd.querySelector("a");
         const ddModal = dd.querySelector(".modal");
 
         if (ddTrigger && ddModal) {
-          // Trigger fixen (WICHTIG)
           ddTrigger.setAttribute("tabindex", "-1");
-          ddTrigger.setAttribute("href", "https://aniworld.to/#");
+          ddTrigger.setAttribute("href", "#");
 
-          // Menü-Links navigierbar machen
           ddModal.querySelectorAll("a").forEach((link) => {
             link.setAttribute("tabindex", "-1");
           });
 
-          // Standard: versteckt
           ddModal.style.display = "none";
 
-          // Öffnen (wie "mehr")
           dd.addEventListener("focusin", function () {
             ddModal.style.display = "block";
             ddModal.style.zIndex = "99999";
           });
 
-          // Schließen
           dd.addEventListener("focusout", function () {
             setTimeout(() => {
               if (!dd.contains(document.activeElement)) {
@@ -1499,7 +1505,7 @@
           // ".liveNewsFeedContent a",
           // "[href='/account/notifications']",
           ".avatar > a",
-          ".dd > p > a[href='https://aniworld.to/#']",
+          ".dd > a[href='https://aniworld.to/#']",
           "a[href='https://aniworld.to/#']",
           ".dd .modal > ul > li > a",
         ].join(", "),
