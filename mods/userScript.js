@@ -77,40 +77,36 @@ import "./spatial_navigation.js";
     const dd = document.querySelector(".dd");
 
     if (dd) {
-      // <p> entfernen und <a> hochziehen
       const p = dd.querySelector("p");
+
       if (p) {
         const a = p.querySelector("a");
         if (a) {
-          dd.insertBefore(a, p);
-          p.remove();
+          dd.insertBefore(a, p); // <a> vor <p> setzen
+          p.remove(); // <p> löschen
         }
       }
 
+      // Danach normal weitermachen
       const ddTrigger = dd.querySelector("a");
       const ddModal = dd.querySelector(".modal");
 
       if (ddTrigger && ddModal) {
-        // Fokus aktivieren
         ddTrigger.setAttribute("tabindex", "-1");
         ddTrigger.setAttribute("href", "#");
 
-        // Alle Dropdown-Links fokussierbar machen
         ddModal.querySelectorAll("a").forEach((link) => {
           link.setAttribute("tabindex", "-1");
         });
 
-        // Standard: versteckt
         ddModal.style.display = "none";
 
-        // 🔥 WICHTIG: direkt auf Trigger reagieren (nicht dd!)
-        ddTrigger.addEventListener("focus", () => {
+        dd.addEventListener("focusin", function () {
           ddModal.style.display = "block";
           ddModal.style.zIndex = "99999";
         });
 
-        // schließen wenn raus
-        dd.addEventListener("focusout", () => {
+        dd.addEventListener("focusout", function () {
           setTimeout(() => {
             if (!dd.contains(document.activeElement)) {
               ddModal.style.display = "none";
@@ -119,13 +115,6 @@ import "./spatial_navigation.js";
         });
       }
     }
-
-    // Fokus aktivieren
-    SN.makeFocusable();
-    SN.makeFocusable("header");
-
-    // 🔥 GAMECHANGER: direkt auf User gehen
-    SN.focus(".dd > a");
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
@@ -200,6 +189,10 @@ import "./spatial_navigation.js";
       ].join(", "),
       restrict: "none",
     });
+    SN.makeFocusable();
+
+    // direkt auf User gehen
+    SN.focus(".dd > a");
 
     if (host !== "aniworld.to") {
       SN.makeFocusable();
