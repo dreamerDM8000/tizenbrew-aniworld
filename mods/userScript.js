@@ -72,46 +72,49 @@ import "./spatial_navigation.js";
     //TODO: User Dropdown
     const dd = document.querySelector(".dd");
 
-    if (dd) {
-      const p = dd.querySelector("p");
-
-      if (p) {
-        const a = p.querySelector("a");
-        if (a) {
-          dd.insertBefore(a, p); // <a> vor <p> setzen
-          p.remove(); // <p> löschen
-        }
-      }
-
-      // Danach normal weitermachen
-      const ddTrigger = dd.querySelector("a");
-      const ddModal = dd.querySelector(".modal");
-
-      if (ddTrigger && ddModal) {
-        ddTrigger.setAttribute("tabindex", "-1");
-        ddTrigger.setAttribute("href", "#");
-
-        ddModal.querySelectorAll("a").forEach((link) => {
-          link.setAttribute("tabindex", "-1");
-        });
-
-        ddModal.style.display = "none";
-
-        dd.addEventListener("focusin", function () {
-          ddModal.style.display = "block";
-          ddModal.style.zIndex = "99999";
-        });
-
-        dd.addEventListener("focusout", function () {
-          setTimeout(() => {
-            if (!dd.contains(document.activeElement)) {
-              ddModal.style.display = "none";
-            }
-          }, 50);
-        });
-      }
+if (dd) {
+  // <p> entfernen und <a> hochziehen
+  const p = dd.querySelector("p");
+  if (p) {
+    const a = p.querySelector("a");
+    if (a) {
+      dd.insertBefore(a, p);
+      p.remove();
     }
+  }
 
+  const ddTrigger = dd.querySelector("a");
+  const ddModal = dd.querySelector(".modal");
+
+  if (ddTrigger && ddModal) {
+    // Fokus aktivieren
+    ddTrigger.setAttribute("tabindex", "-1");
+    ddTrigger.setAttribute("href", "#");
+
+    // Alle Dropdown-Links fokussierbar machen
+    ddModal.querySelectorAll("a").forEach((link) => {
+      link.setAttribute("tabindex", "-1");
+    });
+
+    // Standard: versteckt
+    ddModal.style.display = "none";
+
+    // 🔥 WICHTIG: direkt auf Trigger reagieren (nicht dd!)
+    ddTrigger.addEventListener("focus", () => {
+      ddModal.style.display = "block";
+      ddModal.style.zIndex = "99999";
+    });
+
+    // schließen wenn raus
+    dd.addEventListener("focusout", () => {
+      setTimeout(() => {
+        if (!dd.contains(document.activeElement)) {
+          ddModal.style.display = "none";
+        }
+      }, 50);
+    });
+  }
+}
     // "mehr" Dropdown
     const mehrLi = Array.from(
       document.querySelectorAll(".primary-navigation > ul > li"),
