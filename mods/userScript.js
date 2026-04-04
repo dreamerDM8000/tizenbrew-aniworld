@@ -70,39 +70,47 @@ import "./spatial_navigation.js";
     }
 
     //TODO: User Dropdown
+    // =======================
+    // User Dropdown FIX
+    // =======================
+
     const dd = document.querySelector(".dd");
 
     if (dd) {
+      // <p> entfernen und <a> hochziehen
       const p = dd.querySelector("p");
-
       if (p) {
         const a = p.querySelector("a");
         if (a) {
-          dd.insertBefore(a, p); // <a> vor <p> setzen
-          p.remove(); // <p> löschen
+          dd.insertBefore(a, p);
+          p.remove();
         }
       }
 
-      // Danach normal weitermachen
       const ddTrigger = dd.querySelector("a");
       const ddModal = dd.querySelector(".modal");
 
       if (ddTrigger && ddModal) {
+        // Fokus aktivieren
         ddTrigger.setAttribute("tabindex", "-1");
         ddTrigger.setAttribute("href", "#");
 
+        // Alle Dropdown-Links fokussierbar machen
         ddModal.querySelectorAll("a").forEach((link) => {
           link.setAttribute("tabindex", "-1");
         });
 
+        // Standard: versteckt
         ddModal.style.display = "none";
 
-        dd.addEventListener("focusin", function () {
+        // 🔥 WICHTIG: direkt auf Trigger reagieren (nicht dd!)
+        ddTrigger.addEventListener("focus", () => {
           ddModal.style.display = "block";
           ddModal.style.zIndex = "99999";
         });
 
-        dd.addEventListener("focusout", function () {
+        // schließen wenn raus
+        dd.addEventListener("focusout", () => {
           setTimeout(() => {
             if (!dd.contains(document.activeElement)) {
               ddModal.style.display = "none";
@@ -111,6 +119,13 @@ import "./spatial_navigation.js";
         });
       }
     }
+
+    // Fokus aktivieren
+    SN.makeFocusable();
+    SN.makeFocusable("header");
+
+    // 🔥 GAMECHANGER: direkt auf User gehen
+    SN.focus(".dd > a");
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
@@ -179,10 +194,11 @@ import "./spatial_navigation.js";
         // ".liveNewsFeedContent a",
         // "[href='/account/notifications']",
         ".avatar > a",
-        ".dd > a[href='https://aniworld.to/#']",
-        "a[href='https://aniworld.to/#']",
+        ".dd > a",
+        "a[href='#']",
         ".dd .modal > ul > li > a",
       ].join(", "),
+      restrict: "none",
     });
 
     if (host !== "aniworld.to") {
