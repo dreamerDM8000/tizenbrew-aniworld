@@ -182,11 +182,15 @@ if (dd) {
         // ".liveNewsFeedContent a",
         // "[href='/account/notifications']",
         ".avatar > a",
-        ".dd > a[href='https://aniworld.to/#']",
-        "a[href='https://aniworld.to/#']",
+        ".dd > a",
+        "a[href='#']",
         ".dd .modal > ul > li > a",
       ].join(", "),
     });
+    SN.makeFocusable();
+
+// direkt auf User gehen
+SN.focus(".dd > a");
 
     if (host !== "aniworld.to") {
       SN.makeFocusable();
