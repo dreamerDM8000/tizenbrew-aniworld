@@ -103,6 +103,8 @@
         ddTrigger.addEventListener("focus", () => {
           ddModal.style.display = "block";
           ddModal.style.zIndex = "99999";
+
+          SN.makeFocusable();
         });
 
         // schließen wenn raus
@@ -115,13 +117,6 @@
         });
       }
     }
-
-    // Fokus aktivieren
-    SN.makeFocusable();
-    SN.makeFocusable("header");
-
-    // 🔥 GAMECHANGER: direkt auf User gehen
-    SN.focus(".dd > a");
 
     // "mehr" Dropdown
     const mehrLi = Array.from(
@@ -191,7 +186,7 @@
         // "[href='/account/notifications']",
         ".avatar > a",
         ".dd > a",
-        "a[href='#']",
+        //"a[href='#']",
         ".dd .modal > ul > li > a",
       ].join(", "),
       restrict: "none",
