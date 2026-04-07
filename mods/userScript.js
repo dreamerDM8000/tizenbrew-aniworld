@@ -1,3 +1,5 @@
+import "./spatial_navigation.js";
+
 (function () {
   const FOCUS_STYLE = `
     :focus {
