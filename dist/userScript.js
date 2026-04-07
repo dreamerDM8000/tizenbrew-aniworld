@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   /*
    * A javascript-based implementation of Spatial Navigation.
@@ -10,7 +10,6 @@
    * Licensed under the MPL 2.0.
    */
   (function ($) {
-
     /************************/
     /* Global Configuration */
     /************************/
@@ -281,7 +280,11 @@
 
       var distanceFunction = generateDistanceFunction(targetRect);
 
-      var groups = partition(rects, targetRect, config.straightOverlapThreshold);
+      var groups = partition(
+        rects,
+        targetRect,
+        config.straightOverlapThreshold,
+      );
 
       var internalGroups = partition(
         groups[4],
@@ -569,9 +572,11 @@
     }
 
     function getSectionNavigableElements(sectionId) {
-      return parseSelector(_sections[sectionId].selector).filter(function (elem) {
-        return isNavigable(elem, sectionId);
-      });
+      return parseSelector(_sections[sectionId].selector).filter(
+        function (elem) {
+          return isNavigable(elem, sectionId);
+        },
+      );
     }
 
     function getSectionDefaultElement(sectionId) {
@@ -638,7 +643,9 @@
           direction: direction,
           native: false,
         };
-        if (!fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)) {
+        if (
+          !fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)
+        ) {
           _duringFocusChange = false;
           return false;
         }
@@ -1328,7 +1335,6 @@
   })(window.jQuery);
 
   (function () {
-
     const FOCUS_STYLE = `
     :focus {
       outline: 4px solid #FF6600 !important;
@@ -1448,7 +1454,6 @@
 
       // Fokus aktivieren
       SN.makeFocusable();
-      SN.makeFocusable("header");
 
       // 🔥 GAMECHANGER: direkt auf User gehen
       SN.focus(".dd > a");
@@ -1673,7 +1678,7 @@
             });
           });
         }
-      } else if (path.startsWith("/search?")) ;
+      } else if (path.startsWith("/search?"));
 
       SN.add({
         id: "footer",
@@ -1690,5 +1695,4 @@
       initNavigation();
     }
   })();
-
 })();
