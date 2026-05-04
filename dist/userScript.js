@@ -1416,27 +1416,30 @@
         const ddModal = dd.querySelector(".modal");
 
         if (ddTrigger && ddModal) {
-          // Fokus aktivieren
           ddTrigger.setAttribute("tabindex", "-1");
           ddTrigger.setAttribute("href", "#");
 
-          // Alle Dropdown-Links fokussierbar machen
           ddModal.querySelectorAll("a").forEach((link) => {
             link.setAttribute("tabindex", "-1");
           });
 
-          // Standard: versteckt
           ddModal.style.display = "none";
 
-          // 🔥 WICHTIG: direkt auf Trigger reagieren (nicht dd!)
           ddTrigger.addEventListener("focus", () => {
             ddModal.style.display = "block";
             ddModal.style.zIndex = "99999";
-
             SN.makeFocusable();
           });
 
-          // schließen wenn raus
+          ddTrigger.addEventListener("keydown", (e) => {
+            if (e.keyCode === 40) {
+              // Pfeil runter
+              e.preventDefault();
+              const firstLink = ddModal.querySelector("a");
+              if (firstLink) firstLink.focus();
+            }
+          });
+
           dd.addEventListener("focusout", () => {
             setTimeout(() => {
               if (!dd.contains(document.activeElement)) {
@@ -1505,14 +1508,14 @@
       SN.add({
         id: "header",
         selector: [
-          // ".primary-navigation > ul > li > a",
-          // ".primary-navigation > ul > li > strong",
-          // ".primary-navigation > ul > li > ul > li > a",
-          // ".offset-navigation.extraPadding > a",
-          // ".menuSearchButton",
-          // ".liveNewsFeedButton",
-          // ".liveNewsFeedContent a",
-          // "[href='/account/notifications']",
+          ".primary-navigation > ul > li > a",
+          ".primary-navigation > ul > li > strong",
+          ".primary-navigation > ul > li > ul > li > a",
+          ".offset-navigation.extraPadding > a",
+          ".menuSearchButton",
+          ".liveNewsFeedButton",
+          ".liveNewsFeedContent a",
+          "[href='/account/notifications']",
           ".avatar > a",
           ".dd > a",
           //"a[href='#']",
