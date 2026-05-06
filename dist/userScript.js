@@ -1328,6 +1328,7 @@
   })(window.jQuery);
 
   (function () {
+
     const FOCUS_STYLE = `
     :focus {
       outline: 4px solid #FF6600 !important;
