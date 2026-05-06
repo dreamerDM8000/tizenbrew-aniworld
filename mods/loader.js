@@ -1,8 +1,8 @@
 (function () {
-  var CDN =
+  const CDN =
     "https://cdn.jsdelivr.net/gh/dreamerDM8000/tizenbrew-aniworld@main/dist/userScript.js";
-  var CACHE_KEY = "aniworld_script_cache";
-  var SESSION_KEY = "aniworld_loaded";
+  const CACHE_KEY = "aniworld_script_cache";
+  const SESSION_KEY = "aniworld_loaded";
 
   function run(code) {
     try {
@@ -13,7 +13,7 @@
   }
 
   function showToast(msg) {
-    var toast = document.createElement("div");
+    const toast = document.createElement("div");
     toast.textContent = msg;
     toast.style.cssText = [
       "position: fixed",
@@ -42,12 +42,14 @@
   }
 
   function getVersion(code) {
-    var match = code.match(/var SCRIPT_VERSION\s*=\s*['"](.+?)['"]/);
+    const match = code.match(
+      /(?:var|let|const)\s+SCRIPT_VERSION\s*=\s*['"](.+?)['"]/,
+    );
     return match ? match[1] : "unbekannt";
   }
 
   if (sessionStorage.getItem(SESSION_KEY)) {
-    var cached = localStorage.getItem(CACHE_KEY);
+    const cached = localStorage.getItem(CACHE_KEY);
     if (cached) run(cached);
     return;
   }
@@ -66,7 +68,7 @@
       }, 500);
     })
     .catch(function () {
-      var cached = localStorage.getItem(CACHE_KEY);
+      const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         run(cached);
         setTimeout(function () {
