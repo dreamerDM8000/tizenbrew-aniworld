@@ -1,6 +1,8 @@
 import "./spatial_navigation.js";
 
 (function () {
+  var SCRIPT_VERSION = "1.0.0";
+
   const FOCUS_STYLE = `
     :focus {
       outline: 4px solid #FF6600 !important;

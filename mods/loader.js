@@ -1,0 +1,81 @@
+(function () {
+  var CDN =
+    "https://cdn.jsdelivr.net/gh/dreamerDM8000/tizenbrew-aniworld@main/dist/userScript.js";
+  var CACHE_KEY = "aniworld_script_cache";
+  var SESSION_KEY = "aniworld_loaded";
+
+  function run(code) {
+    try {
+      new Function(code)();
+    } catch (e) {
+      console.error("[AniWorld Loader] Fehler:", e);
+    }
+  }
+
+  function showToast(msg) {
+    var toast = document.createElement("div");
+    toast.textContent = msg;
+    toast.style.cssText = [
+      "position: fixed",
+      "bottom: 40px",
+      "left: 50%",
+      "transform: translateX(-50%)",
+      "background: #FF6600",
+      "color: #fff",
+      "padding: 10px 24px",
+      "border-radius: 8px",
+      "font-size: 20px",
+      "z-index: 999999",
+      "opacity: 1",
+      "transition: opacity 1s ease",
+    ].join(";");
+
+    document.body.appendChild(toast);
+
+    // Nach 3 Sekunden ausblenden
+    setTimeout(function () {
+      toast.style.opacity = "0";
+      setTimeout(function () {
+        toast.remove();
+      }, 1000);
+    }, 3000);
+  }
+
+  function getVersion(code) {
+    var match = code.match(/var SCRIPT_VERSION\s*=\s*['"](.+?)['"]/);
+    return match ? match[1] : "unbekannt";
+  }
+
+  if (sessionStorage.getItem(SESSION_KEY)) {
+    var cached = localStorage.getItem(CACHE_KEY);
+    if (cached) run(cached);
+    return;
+  }
+
+  fetch(CDN + "?v=" + Date.now())
+    .then(function (res) {
+      return res.text();
+    })
+    .then(function (code) {
+      localStorage.setItem(CACHE_KEY, code);
+      sessionStorage.setItem(SESSION_KEY, "1");
+      run(code);
+      // Toast erst nach run() damit document.body existiert
+      setTimeout(function () {
+        showToast("AniWorld Script v" + getVersion(code) + " geladen");
+      }, 500);
+    })
+    .catch(function () {
+      var cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        run(cached);
+        setTimeout(function () {
+          showToast(
+            "AniWorld Script v" + getVersion(cached) + " (Offline-Cache)",
+          );
+        }, 500);
+      } else {
+        console.error("[AniWorld Loader] Offline und kein Cache!");
+      }
+    });
+})();
