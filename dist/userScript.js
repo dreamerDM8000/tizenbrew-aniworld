@@ -1328,7 +1328,7 @@
   })(window.jQuery);
 
   (function () {
-    const SCRIPT_VERSION = "1.0.0";
+    window.SCRIPT_VERSION = "1.0.0";
     console.log(SCRIPT_VERSION);
 
     const FOCUS_STYLE = `

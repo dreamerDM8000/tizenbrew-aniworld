@@ -1,7 +1,7 @@
 import "./spatial_navigation.js";
 
 (function () {
-  const SCRIPT_VERSION = "1.0.0";
+  window.SCRIPT_VERSION = "1.0.0";
   console.log(SCRIPT_VERSION);
 
   const FOCUS_STYLE = `

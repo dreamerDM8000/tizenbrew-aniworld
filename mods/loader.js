@@ -1,7 +1,7 @@
 (function () {
-  //test2
+  //test3
   const CDN =
-    "https://cdn.jsdelivr.net/gh/dreamerDM8000/tizenbrew-aniworld@main/dist/userScript.js";
+    "https://raw.githubusercontent.com/dreamerDM8000/tizenbrew-aniworld/refs/heads/main/mods/loader.js";
   const CACHE_KEY = "aniworld_script_cache";
   const SESSION_KEY = "aniworld_loaded";
 
@@ -42,11 +42,8 @@
     }, 3000);
   }
 
-  function getVersion(code) {
-    const match = code.match(
-      /(?:var|let|const)\s+SCRIPT_VERSION\s*=\s*['"](.+?)['"]/,
-    );
-    return match ? match[1] : "unbekannt";
+  function getVersion() {
+    return window.SCRIPT_VERSION || "unbekannt";
   }
 
   if (sessionStorage.getItem(SESSION_KEY)) {
@@ -55,7 +52,9 @@
     return;
   }
 
-  fetch(CDN + "?v=" + Date.now())
+  fetch(CDN + "?t=" + Date.now(), {
+    cache: "no-store",
+  })
     .then(function (res) {
       return res.text();
     })
