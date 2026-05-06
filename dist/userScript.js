@@ -1,5 +1,5 @@
 (function () {
-  "use strict";
+  'use strict';
 
   /*
    * A javascript-based implementation of Spatial Navigation.
@@ -10,6 +10,7 @@
    * Licensed under the MPL 2.0.
    */
   (function ($) {
+
     /************************/
     /* Global Configuration */
     /************************/
@@ -280,11 +281,7 @@
 
       var distanceFunction = generateDistanceFunction(targetRect);
 
-      var groups = partition(
-        rects,
-        targetRect,
-        config.straightOverlapThreshold,
-      );
+      var groups = partition(rects, targetRect, config.straightOverlapThreshold);
 
       var internalGroups = partition(
         groups[4],
@@ -572,11 +569,9 @@
     }
 
     function getSectionNavigableElements(sectionId) {
-      return parseSelector(_sections[sectionId].selector).filter(
-        function (elem) {
-          return isNavigable(elem, sectionId);
-        },
-      );
+      return parseSelector(_sections[sectionId].selector).filter(function (elem) {
+        return isNavigable(elem, sectionId);
+      });
     }
 
     function getSectionDefaultElement(sectionId) {
@@ -643,9 +638,7 @@
           direction: direction,
           native: false,
         };
-        if (
-          !fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)
-        ) {
+        if (!fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)) {
           _duringFocusChange = false;
           return false;
         }
@@ -1335,7 +1328,7 @@
   })(window.jQuery);
 
   (function () {
-    window.SCRIPT_VERSION = "1.0.2";
+    window.SCRIPT_VERSION = "1.0.3";
     console.log(SCRIPT_VERSION);
 
     const FOCUS_STYLE = `
@@ -1490,7 +1483,6 @@
             tabIndexIgnoreList: "",
           });
           SN.makeFocusable("mehr-dropdown");
-          // SN.focus("mehr-dropdown");
         });
 
         mehrLi.addEventListener("focusout", function () {
@@ -1744,4 +1736,5 @@
       initNavigation();
     }
   })();
+
 })();
