@@ -1,7 +1,7 @@
 import "./spatial_navigation.js";
 
 (function () {
-  window.SCRIPT_VERSION = "1.0.0";
+  window.SCRIPT_VERSION = "1.0.2";
   console.log(SCRIPT_VERSION);
 
   const FOCUS_STYLE = `
@@ -58,7 +58,9 @@ import "./spatial_navigation.js";
     const parts = path.split("/");
     SN.init();
 
+    // =======================
     // Avatar
+    // =======================
     const avatarLink = document.querySelector(".avatar > a");
     if (avatarLink) {
       const img = avatarLink.querySelector("img");
@@ -70,134 +72,172 @@ import "./spatial_navigation.js";
       });
     }
 
-    //TODO: User Dropdown
+    // // =======================
+    // // User Dropdown
+    // // =======================
+    // const dd = document.querySelector(".dd");
+    // if (dd) {
+    //   const p = dd.querySelector("p");
+    //   if (p) {
+    //     const a = p.querySelector("a");
+    //     if (a) {
+    //       dd.insertBefore(a, p);
+    //       p.remove();
+    //     }
+    //   }
+
+    //   const ddTrigger = dd.querySelector("a");
+    //   const ddModal = dd.querySelector(".modal");
+
+    //   if (ddTrigger && ddModal) {
+    //     ddTrigger.setAttribute("tabindex", "-1");
+    //     ddTrigger.setAttribute("href", "#");
+    //     ddModal.style.display = "none";
+
+    //     ddTrigger.addEventListener("focus", () => {
+    //       ddModal.style.display = "block";
+    //       ddModal.style.zIndex = "99999";
+
+    //       SN.remove("dd-modal");
+    //       SN.add({
+    //         id: "dd-modal",
+    //         selector: ".dd .modal > ul > li > a",
+    //         restrict: "self-only",
+    //         enterTo: "first",
+    //         tabIndexIgnoreList: SN_IGNORE,
+    //         leaveFor: {
+    //           up: "@header",
+    //           down: "@header",
+    //           left: "@header",
+    //           right: "@header",
+    //         },
+    //       });
+    //       SN.makeFocusable("dd-modal");
+    //       SN.focus("dd-modal");
+    //     });
+
+    //     dd.addEventListener("focusout", () => {
+    //       setTimeout(() => {
+    //         if (!dd.contains(document.activeElement)) {
+    //           ddModal.style.display = "none";
+    //           SN.remove("dd-modal");
+    //         }
+    //       }, 50);
+    //     });
+    //   }
+    // }
+
     // =======================
-    // User Dropdown FIX
-    // =======================
-
-    const dd = document.querySelector(".dd");
-
-    if (dd) {
-      // <p> entfernen und <a> hochziehen
-      const p = dd.querySelector("p");
-      if (p) {
-        const a = p.querySelector("a");
-        if (a) {
-          dd.insertBefore(a, p);
-          p.remove();
-        }
-      }
-
-      const ddTrigger = dd.querySelector("a");
-      const ddModal = dd.querySelector(".modal");
-
-      if (ddTrigger && ddModal) {
-        ddTrigger.setAttribute("tabindex", "-1");
-        ddTrigger.setAttribute("href", "#");
-
-        ddModal.querySelectorAll("a").forEach((link) => {
-          link.setAttribute("tabindex", "-1");
-        });
-
-        ddModal.style.display = "none";
-
-        ddTrigger.addEventListener("focus", () => {
-          ddModal.style.display = "block";
-          ddModal.style.zIndex = "99999";
-          SN.makeFocusable();
-        });
-
-        ddTrigger.addEventListener("keydown", (e) => {
-          if (e.keyCode === 40) {
-            // Pfeil runter
-            e.preventDefault();
-            const firstLink = ddModal.querySelector("a");
-            if (firstLink) firstLink.focus();
-          }
-        });
-
-        dd.addEventListener("focusout", () => {
-          setTimeout(() => {
-            if (!dd.contains(document.activeElement)) {
-              ddModal.style.display = "none";
-            }
-          }, 50);
-        });
-      }
-    }
-
     // "mehr" Dropdown
-    const mehrLi = Array.from(
-      document.querySelectorAll(".primary-navigation > ul > li"),
-    ).find((li) => li.querySelector(":scope > strong"));
+    // =======================
+    const mehrStrong = document.querySelector(
+      ".primary-navigation > ul > li > strong",
+    );
 
-    if (mehrLi) {
-      const strong = mehrLi.querySelector("strong");
+    if (mehrStrong) {
+      const mehrLi = mehrStrong.parentElement;
       const mehrUl = mehrLi.querySelector("ul");
-      strong.setAttribute("tabindex", "-1");
 
-      mehrLi.addEventListener("focusin", function () {
-        mehrUl.style.display = "block";
-        mehrUl.style.zIndex = "99999";
+      mehrStrong.addEventListener("focus", function () {
+        Object.assign(mehrUl.style, {
+          display: "block",
+          position: "absolute",
+          width: "150px",
+          borderRadius: "5px",
+          paddingTop: "15px",
+          zIndex: "99999",
+          left: "-25px",
+        });
+
+        SN.remove("mehr-dropdown");
+        SN.add({
+          id: "mehr-dropdown",
+          selector: ".primary-navigation > ul > li > ul > li > a",
+          tabIndexIgnoreList: "",
+        });
+        SN.makeFocusable("mehr-dropdown");
       });
 
       mehrLi.addEventListener("focusout", function () {
         setTimeout(() => {
           if (!mehrLi.contains(document.activeElement)) {
-            mehrUl.style.display = "";
-            mehrUl.style.zIndex = "";
+            mehrUl.removeAttribute("style");
+            SN.remove("mehr-dropdown");
           }
         }, 50);
       });
     }
 
-    // menuSearchButton
-    const menuSearchButton = document.querySelector(".menuSearchButton");
-    if (menuSearchButton) {
-      menuSearchButton.setAttribute("tabindex", "-1");
-      menuSearchButton.addEventListener("keydown", function (e) {
-        if (e.keyCode === 13) menuSearchButton.click();
-      });
-    }
+    // // =======================
+    // // menuSearchButton
+    // // =======================
+    // const menuSearchButton = document.querySelector(".menuSearchButton");
+    // if (menuSearchButton) {
+    //   menuSearchButton.setAttribute("tabindex", "-1");
+    //   menuSearchButton.addEventListener("keydown", function (e) {
+    //     if (e.keyCode === 13) menuSearchButton.click();
+    //   });
+    // }
 
-    // liveNewsFeed
-    const liveNewsFeed = document.querySelector(".liveNewsFeed");
-    if (liveNewsFeed) {
-      const button = liveNewsFeed.querySelector(".liveNewsFeedButton");
-      const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
-      button.setAttribute("tabindex", "-1");
+    // // =======================
+    // // liveNewsFeed
+    // // =======================
+    // const liveNewsFeed = document.querySelector(".liveNewsFeed");
+    // if (liveNewsFeed) {
+    //   const button = liveNewsFeed.querySelector(".liveNewsFeedButton");
+    //   const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
 
-      liveNewsFeed.addEventListener("focusin", function () {
-        section.style.display = "block";
-      });
+    //   button.addEventListener("focus", function () {
+    //     section.style.display = "block";
 
-      liveNewsFeed.addEventListener("focusout", function () {
-        setTimeout(() => {
-          if (!liveNewsFeed.contains(document.activeElement)) {
-            section.style.display = "none";
-          }
-        }, 50);
-      });
-    }
+    //     SN.remove("newsfeed");
+    //     SN.add({
+    //       id: "newsfeed",
+    //       selector: [
+    //         ".liveNewsFeedContent > li > a",
+    //         "[href='/account/notifications']",
+    //       ].join(", "),
+    //       restrict: "self-only",
+    //       enterTo: "first",
+    //       tabIndexIgnoreList: SN_IGNORE,
+    //       leaveFor: {
+    //         up: "@header",
+    //         down: "@header",
+    //         left: "@header",
+    //         right: "@header",
+    //       },
+    //     });
+    //     SN.makeFocusable("newsfeed");
+    //     SN.focus("newsfeed");
+    //   });
 
+    //   liveNewsFeed.addEventListener("focusout", function () {
+    //     setTimeout(() => {
+    //       if (!liveNewsFeed.contains(document.activeElement)) {
+    //         section.style.display = "none";
+    //         SN.remove("newsfeed");
+    //       }
+    //     }, 50);
+    //   });
+    // }
+
+    // =======================
     // Header (alle Seiten)
+    // =======================
     SN.add({
       id: "header",
       selector: [
         ".primary-navigation > ul > li > a",
         ".primary-navigation > ul > li > strong",
-        ".primary-navigation > ul > li > ul > li > a",
+
         ".offset-navigation.extraPadding > a",
         ".menuSearchButton",
         ".liveNewsFeedButton",
-        ".liveNewsFeedContent a",
-        "[href='/account/notifications']",
         ".avatar > a",
         ".dd > a",
-        //"a[href='#']",
-        ".dd .modal > ul > li > a",
       ].join(", "),
       restrict: "none",
+      tabIndexIgnoreList: "",
     });
 
     if (host !== "aniworld.to") {
@@ -260,12 +300,14 @@ import "./spatial_navigation.js";
             ".iCheck-helper",
             ".col-md-4 > form > a",
           ].join(", "),
+          tabIndexIgnoreList: "",
         });
       }
     } else if (path === "/account") {
       SN.add({
         id: "account",
         selector: [".close a", ".reviewList.row > li > a"].join(", "),
+        tabIndexIgnoreList: "",
       });
     } else if (
       path === "/account/watchlist" ||
@@ -279,6 +321,7 @@ import "./spatial_navigation.js";
           ".seriesListNavigation > a",
           ".seriesListContainer.row a",
         ].join(", "),
+        tabIndexIgnoreList: "",
       });
     } else if (path.startsWith("/anime/stream/")) {
       const hasEpisode = parts.some((p) => p.startsWith("episode-"));
@@ -288,6 +331,7 @@ import "./spatial_navigation.js";
         SN.add({
           id: "player",
           selector: ".cf.breadCrumbMenu.dark > li > a",
+          tabIndexIgnoreList: "",
         });
       } else {
         const snId = parts.length === 4 ? "anime-main" : "anime-season";
@@ -303,6 +347,7 @@ import "./spatial_navigation.js";
             "tbody > tr > td > a",
             ".episodeMenu",
           ].join(", "),
+          tabIndexIgnoreList: "",
         });
 
         // Staffel gesehen Dropdown
@@ -351,6 +396,7 @@ import "./spatial_navigation.js";
     SN.add({
       id: "footer",
       selector: ".footer-container > div > ul > li > a",
+      tabIndexIgnoreList: "",
     });
 
     SN.makeFocusable();

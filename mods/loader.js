@@ -1,5 +1,4 @@
 (function () {
-  //test3
   const CDN =
     "https://raw.githubusercontent.com/dreamerDM8000/tizenbrew-aniworld/main/dist/userScript.js";
   const CACHE_KEY = "aniworld_script_cache";
