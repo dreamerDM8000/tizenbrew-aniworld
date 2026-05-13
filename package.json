@@ -9,6 +9,7 @@
   "main": "mods/loader.js",
   "serviceFile": "service/service.js",
   "keys": [
+    "Back",
     "MediaPlayPause",
     "MediaPlay",
     "MediaPause",

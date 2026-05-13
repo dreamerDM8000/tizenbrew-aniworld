@@ -61,6 +61,10 @@ import "./spatial_navigation.js";
     const parts = path.split("/");
     SN.init();
 
+    document.querySelectorAll("a[target='_blank']").forEach((a) => {
+      a.removeAttribute("target");
+    });
+
     // Avatar
     const avatarLink = document.querySelector(".avatar > a");
     if (avatarLink) {
