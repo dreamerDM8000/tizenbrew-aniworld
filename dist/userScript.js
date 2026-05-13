@@ -1328,7 +1328,7 @@
   })(window.jQuery);
 
   (function () {
-    window.SCRIPT_VERSION = "1.0.3";
+    window.SCRIPT_VERSION = "1.0.4";
     console.log(SCRIPT_VERSION);
 
     const FOCUS_STYLE = `
@@ -1358,6 +1358,9 @@
     .avatar img {
       border-radius: 50%;
     }
+    #searchAutocomplete > li > a:focus {
+    outline-offset: -4px !important;
+    }
   `;
 
     function initNavigation() {
@@ -1385,9 +1388,7 @@
       const parts = path.split("/");
       SN.init();
 
-      // =======================
       // Avatar
-      // =======================
       const avatarLink = document.querySelector(".avatar > a");
       if (avatarLink) {
         const img = avatarLink.querySelector("img");
@@ -1398,6 +1399,7 @@
           img.removeAttribute("style");
         });
       }
+      //=======================
 
       // // =======================
       // // User Dropdown
@@ -1454,9 +1456,7 @@
       //   }
       // }
 
-      // =======================
       // "mehr" Dropdown
-      // =======================
       const mehrStrong = document.querySelector(
         ".primary-navigation > ul > li > strong",
       );
@@ -1494,63 +1494,118 @@
           }, 50);
         });
       }
+      //=======================
 
-      // // =======================
-      // // menuSearchButton
-      // // =======================
-      // const menuSearchButton = document.querySelector(".menuSearchButton");
-      // if (menuSearchButton) {
-      //   menuSearchButton.setAttribute("tabindex", "-1");
-      //   menuSearchButton.addEventListener("keydown", function (e) {
-      //     if (e.keyCode === 13) menuSearchButton.click();
-      //   });
-      // }
+      // menuSearchButton
+      const menuSearchButton = document.querySelector(".menuSearchButton");
+      if (menuSearchButton) {
+        menuSearchButton.addEventListener("keydown", function (e) {
+          if (e.keyCode !== 13) return;
 
-      // // =======================
-      // // liveNewsFeed
-      // // =======================
-      // const liveNewsFeed = document.querySelector(".liveNewsFeed");
-      // if (liveNewsFeed) {
-      //   const button = liveNewsFeed.querySelector(".liveNewsFeedButton");
-      //   const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
+          document.addEventListener(
+            "submit",
+            function b(ev) {
+              ev.preventDefault();
+              document.removeEventListener("submit", b, true);
+            },
+            true,
+          );
 
-      //   button.addEventListener("focus", function () {
-      //     section.style.display = "block";
+          menuSearchButton.click();
 
-      //     SN.remove("newsfeed");
-      //     SN.add({
-      //       id: "newsfeed",
-      //       selector: [
-      //         ".liveNewsFeedContent > li > a",
-      //         "[href='/account/notifications']",
-      //       ].join(", "),
-      //       restrict: "self-only",
-      //       enterTo: "first",
-      //       tabIndexIgnoreList: SN_IGNORE,
-      //       leaveFor: {
-      //         up: "@header",
-      //         down: "@header",
-      //         left: "@header",
-      //         right: "@header",
-      //       },
-      //     });
-      //     SN.makeFocusable("newsfeed");
-      //     SN.focus("newsfeed");
-      //   });
-
-      //   liveNewsFeed.addEventListener("focusout", function () {
-      //     setTimeout(() => {
-      //       if (!liveNewsFeed.contains(document.activeElement)) {
-      //         section.style.display = "none";
-      //         SN.remove("newsfeed");
-      //       }
-      //     }, 50);
-      //   });
-      // }
-
+          setTimeout(() => {
+            if (!document.querySelector("#inputSearch")) return;
+            SN.remove("search-area");
+            SN.add({
+              id: "search-area",
+              selector:
+                "#inputSearch, .searchContainer button, #searchAutocomplete > li > a",
+              tabIndexIgnoreList: "",
+            });
+            SN.makeFocusable("search-area");
+            SN.focus("search-area");
+          }, 100);
+        });
+      }
       // =======================
+
+      // liveNewsFeed
+      const liveNewsFeed = document.querySelector(".liveNewsFeed");
+      if (liveNewsFeed) {
+        const button = liveNewsFeed.querySelector(".liveNewsFeedButton");
+
+        button.addEventListener("keydown", function (e) {
+          if (e.keyCode !== 13) return;
+          button.click();
+
+          setTimeout(() => {
+            const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
+            if (!section) return;
+
+            const items = [
+              ...section.querySelectorAll(".liveNewsFeedContent > li > a"),
+              section.querySelector("[href='/account/notifications']"),
+            ].filter(Boolean);
+
+            items.forEach((a) => a.setAttribute("tabindex", "-1"));
+            let i = 0;
+
+            function cleanup(reenter = false) {
+              section.removeEventListener("keydown", nav);
+              items.forEach((a) => a.setAttribute("tabindex", "-1"));
+              if (reenter) button.addEventListener("keydown", enterBox);
+              button.focus();
+            }
+
+            function nav(e) {
+              if (e.keyCode === 40) {
+                if (i < items.length - 1) {
+                  e.preventDefault();
+                  items[++i].focus();
+                } else cleanup();
+              } else if (e.keyCode === 38) {
+                if (i <= 0) cleanup(true);
+                else {
+                  e.preventDefault();
+                  items[--i].focus();
+                }
+              } else if (e.keyCode === 37 || e.keyCode === 39) {
+                cleanup();
+              } else if (e.keyCode === 10009 || e.keyCode === 27) {
+                cleanup(true);
+              }
+            }
+
+            function enterBox(e) {
+              if (e.keyCode !== 40) return;
+              e.preventDefault();
+              e.stopPropagation();
+              i = 0;
+              items.forEach((a) => a.setAttribute("tabindex", "0"));
+              items[0].focus();
+              button.removeEventListener("keydown", enterBox);
+              section.addEventListener("keydown", nav);
+            }
+
+            button.addEventListener("keydown", enterBox);
+          }, 300);
+        });
+
+        liveNewsFeed.addEventListener("focusout", function () {
+          setTimeout(() => {
+            if (!liveNewsFeed.contains(document.activeElement)) {
+              const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
+              if (section) {
+                section.style.display = "none";
+                section.dataset.activeStatus = "0";
+              }
+            }
+          }, 80);
+        });
+      }
+      // =======================
+
       // Header (alle Seiten)
-      // =======================
       SN.add({
         id: "header",
         selector: [
@@ -1566,6 +1621,7 @@
         restrict: "none",
         tabIndexIgnoreList: "",
       });
+      // =======================
 
       if (host !== "aniworld.to") {
         SN.makeFocusable();
