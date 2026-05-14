@@ -65,74 +65,6 @@ import "./spatial_navigation.js";
       a.removeAttribute("target");
     });
 
-    // Avatar
-    const avatarLink = document.querySelector(".avatar > a");
-    if (avatarLink) {
-      const img = avatarLink.querySelector("img");
-      avatarLink.addEventListener("focus", function () {
-        img.setAttribute("style", "box-shadow: 0 0 0 4px #FF6600;");
-      });
-      avatarLink.addEventListener("blur", function () {
-        img.removeAttribute("style");
-      });
-    }
-    //=======================
-
-    // // =======================
-    // // User Dropdown
-    // // =======================
-    // const dd = document.querySelector(".dd");
-    // if (dd) {
-    //   const p = dd.querySelector("p");
-    //   if (p) {
-    //     const a = p.querySelector("a");
-    //     if (a) {
-    //       dd.insertBefore(a, p);
-    //       p.remove();
-    //     }
-    //   }
-
-    //   const ddTrigger = dd.querySelector("a");
-    //   const ddModal = dd.querySelector(".modal");
-
-    //   if (ddTrigger && ddModal) {
-    //     ddTrigger.setAttribute("tabindex", "-1");
-    //     ddTrigger.setAttribute("href", "#");
-    //     ddModal.style.display = "none";
-
-    //     ddTrigger.addEventListener("focus", () => {
-    //       ddModal.style.display = "block";
-    //       ddModal.style.zIndex = "99999";
-
-    //       SN.remove("dd-modal");
-    //       SN.add({
-    //         id: "dd-modal",
-    //         selector: ".dd .modal > ul > li > a",
-    //         restrict: "self-only",
-    //         enterTo: "first",
-    //         tabIndexIgnoreList: SN_IGNORE,
-    //         leaveFor: {
-    //           up: "@header",
-    //           down: "@header",
-    //           left: "@header",
-    //           right: "@header",
-    //         },
-    //       });
-    //       SN.makeFocusable("dd-modal");
-    //       SN.focus("dd-modal");
-    //     });
-
-    //     dd.addEventListener("focusout", () => {
-    //       setTimeout(() => {
-    //         if (!dd.contains(document.activeElement)) {
-    //           ddModal.style.display = "none";
-    //           SN.remove("dd-modal");
-    //         }
-    //       }, 50);
-    //     });
-    //   }
-    // }
-
     // "mehr" Dropdown
     const mehrStrong = document.querySelector(
       ".primary-navigation > ul > li > strong",
@@ -282,6 +214,82 @@ import "./spatial_navigation.js";
     }
     // =======================
 
+    // Avatar
+    const avatarLink = document.querySelector(".avatar > a");
+    if (avatarLink) {
+      const img = avatarLink.querySelector("img");
+      avatarLink.addEventListener("focus", function () {
+        img.setAttribute("style", "box-shadow: 0 0 0 4px #FF6600;");
+      });
+      avatarLink.addEventListener("blur", function () {
+        img.removeAttribute("style");
+      });
+    }
+    //=======================
+
+    // User Dropdown
+    const dd = document.querySelector(".dd");
+    if (dd) {
+      const trigger = dd.querySelector("p > a");
+      const modal = dd.querySelector(".modal");
+
+      trigger.addEventListener("focus", function () {
+        modal.style.display = "block";
+
+        const items = [...modal.querySelectorAll("ul > li > a")];
+        items.forEach((a) => a.setAttribute("tabindex", "-1"));
+        let i = 0;
+
+        function cleanup(reenter = false) {
+          modal.removeEventListener("keydown", nav);
+          items.forEach((a) => a.setAttribute("tabindex", "-1"));
+          if (reenter) trigger.addEventListener("keydown", enterBox);
+          trigger.focus();
+        }
+
+        function nav(e) {
+          if (e.keyCode === 40) {
+            if (i < items.length - 1) {
+              e.preventDefault();
+              items[++i].focus();
+            } else cleanup();
+          } else if (e.keyCode === 38) {
+            if (i <= 0) cleanup(true);
+            else {
+              e.preventDefault();
+              items[--i].focus();
+            }
+          } else if (e.keyCode === 37 || e.keyCode === 39) {
+            cleanup();
+          } else if (e.keyCode === 10009 || e.keyCode === 27) {
+            cleanup(true);
+          }
+        }
+
+        function enterBox(e) {
+          if (e.keyCode !== 40) return;
+          e.preventDefault();
+          e.stopPropagation();
+          i = 0;
+          items.forEach((a) => a.setAttribute("tabindex", "0"));
+          items[0].focus();
+          trigger.removeEventListener("keydown", enterBox);
+          modal.addEventListener("keydown", nav);
+        }
+
+        trigger.addEventListener("keydown", enterBox);
+      });
+
+      dd.addEventListener("focusout", function () {
+        setTimeout(() => {
+          if (!dd.contains(document.activeElement)) {
+            modal.style.display = "none";
+          }
+        }, 80);
+      });
+    }
+    // =======================
+
     // Header (alle Seiten)
     SN.add({
       id: "header",
@@ -293,7 +301,7 @@ import "./spatial_navigation.js";
         ".menuSearchButton",
         ".liveNewsFeedButton",
         ".avatar > a",
-        ".dd > a",
+        ".dd > p > a",
       ].join(", "),
       restrict: "none",
       tabIndexIgnoreList: "",
