@@ -1,5 +1,5 @@
 (function () {
-  "use strict";
+  'use strict';
 
   /*
    * A javascript-based implementation of Spatial Navigation.
@@ -10,6 +10,7 @@
    * Licensed under the MPL 2.0.
    */
   (function ($) {
+
     /************************/
     /* Global Configuration */
     /************************/
@@ -280,11 +281,7 @@
 
       var distanceFunction = generateDistanceFunction(targetRect);
 
-      var groups = partition(
-        rects,
-        targetRect,
-        config.straightOverlapThreshold,
-      );
+      var groups = partition(rects, targetRect, config.straightOverlapThreshold);
 
       var internalGroups = partition(
         groups[4],
@@ -572,11 +569,9 @@
     }
 
     function getSectionNavigableElements(sectionId) {
-      return parseSelector(_sections[sectionId].selector).filter(
-        function (elem) {
-          return isNavigable(elem, sectionId);
-        },
-      );
+      return parseSelector(_sections[sectionId].selector).filter(function (elem) {
+        return isNavigable(elem, sectionId);
+      });
     }
 
     function getSectionDefaultElement(sectionId) {
@@ -643,9 +638,7 @@
           direction: direction,
           native: false,
         };
-        if (
-          !fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)
-        ) {
+        if (!fireEvent(currentFocusedElement, "willunfocus", unfocusProperties)) {
           _duringFocusChange = false;
           return false;
         }
@@ -1380,6 +1373,7 @@
           if (window.history.length > 1) {
             window.history.back();
           } else if (typeof tizen !== "undefined") {
+            SN.uninit();
             tizen.application.getCurrentApplication().exit();
           }
         }
@@ -1537,9 +1531,7 @@
         liveNewsFeed.addEventListener("focusout", function () {
           setTimeout(() => {
             if (!liveNewsFeed.contains(document.activeElement)) {
-              const section = liveNewsFeed.querySelector(
-                ".liveNewsFeedSection",
-              );
+              const section = liveNewsFeed.querySelector(".liveNewsFeedSection");
               if (section) {
                 section.style.display = "none";
                 section.dataset.activeStatus = "0";
@@ -1813,4 +1805,5 @@
       initNavigation();
     }
   })();
+
 })();

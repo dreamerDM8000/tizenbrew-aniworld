@@ -46,6 +46,7 @@ import "./spatial_navigation.js";
         if (window.history.length > 1) {
           window.history.back();
         } else if (typeof tizen !== "undefined") {
+          SN.uninit();
           tizen.application.getCurrentApplication().exit();
         }
       }
