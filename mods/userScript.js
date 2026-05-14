@@ -1,8 +1,15 @@
 import "./spatial_navigation.js";
 
 (function () {
-  window.SCRIPT_VERSION = "1.0.5";
+  window.SCRIPT_VERSION = "1.0.6";
   console.log(SCRIPT_VERSION);
+
+  if (window.__ANIWORLD_NAV_INITIALIZED__) {
+    console.log("Navigation bereits initialisiert");
+    return;
+  }
+
+  window.__ANIWORLD_NAV_INITIALIZED__ = true;
 
   const FOCUS_STYLE = `
     :focus {
@@ -228,6 +235,15 @@ import "./spatial_navigation.js";
     }
     //=======================
 
+    // Avatar <-> Profil Navigation Fix
+    const avatar = document.querySelector(".avatar > a");
+    const profile = document.querySelector(".dd > p > a");
+
+    if (avatar && profile) {
+      avatar.setAttribute("data-sn-right", ".dd > p > a");
+      profile.setAttribute("data-sn-left", ".avatar > a");
+    }
+
     // User Dropdown
     const dd = document.querySelector(".dd");
     if (dd) {
@@ -271,15 +287,22 @@ import "./spatial_navigation.js";
 
         function enterBox(e) {
           if (e.keyCode !== 40) return;
+
           e.preventDefault();
           e.stopPropagation();
+
           i = 0;
+
           items.forEach((a) => a.setAttribute("tabindex", "0"));
+
           items[0].focus();
+
           trigger.removeEventListener("keydown", enterBox);
+
           modal.addEventListener("keydown", nav);
         }
 
+        trigger.removeEventListener("keydown", enterBox);
         trigger.addEventListener("keydown", enterBox);
       });
 
