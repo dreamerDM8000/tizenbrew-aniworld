@@ -1328,7 +1328,7 @@
   })(window.jQuery);
 
   (function () {
-    window.SCRIPT_VERSION = "1.0.4";
+    window.SCRIPT_VERSION = "1.0.5";
     console.log(SCRIPT_VERSION);
 
     const FOCUS_STYLE = `
@@ -1560,6 +1560,8 @@
       if (dd) {
         const trigger = dd.querySelector("p > a");
         const modal = dd.querySelector(".modal");
+
+        trigger.setAttribute("tabindex", "0");
 
         trigger.addEventListener("focus", function () {
           modal.style.display = "block";
