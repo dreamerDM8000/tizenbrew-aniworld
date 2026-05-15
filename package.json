@@ -35,7 +35,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "rollup -c mods/rollup.config.js"
+    "build": "node mods/bump-version.js && rollup -c mods/rollup.config.js"
   },
   "devDependencies": {
     "rollup": "^4.60.1"
