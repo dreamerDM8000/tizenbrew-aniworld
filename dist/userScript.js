@@ -1328,7 +1328,7 @@
   })(window.jQuery);
 
   (function () {
-    window.SCRIPT_VERSION = "1.0.6";
+    window.SCRIPT_VERSION = "1.0.7";
     console.log(SCRIPT_VERSION);
 
     if (window.__ANIWORLD_NAV_INITIALIZED__) {
