@@ -68,6 +68,13 @@ import "./spatial_navigation.js";
     const host = window.location.hostname;
     const parts = path.split("/");
     SN.init();
+    SN.init();
+    SN.clear();
+    document.querySelector(".menuSearchButton")?.setAttribute("tabindex", "0");
+    document
+      .querySelector(".liveNewsFeedButton")
+      ?.setAttribute("tabindex", "0");
+    document.querySelector(".dd > p > a")?.setAttribute("tabindex", "0");
 
     document.querySelectorAll("a[target='_blank']").forEach((a) => {
       a.removeAttribute("target");
