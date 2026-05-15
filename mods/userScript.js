@@ -257,8 +257,6 @@ import "./spatial_navigation.js";
       const trigger = dd.querySelector("p > a");
       const modal = dd.querySelector(".modal");
 
-      trigger.setAttribute("tabindex", "0");
-
       trigger.addEventListener("focus", function () {
         modal.style.display = "block";
 
